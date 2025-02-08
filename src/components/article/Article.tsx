@@ -8,7 +8,7 @@ import styles from './Article.module.scss';
 
 export const Article = () => {
 	return (
-		<article className={clsx(styles.article)}>
+		<article className={styles.article}>
 			<Text as='h1' size={45} weight={800} uppercase dynamicLite>
 				Портрет Западной Швейцарии
 			</Text>

@@ -1,29 +1,33 @@
 import { useEffect, useRef, useState } from 'react';
+import clsx from 'clsx';
 import { ArrowButton } from 'src/ui/arrow-button';
 import { Button } from 'src/ui/button';
 import { Select } from 'src/ui/select';
 import { RadioGroup } from 'src/ui/radio-group';
 import { Separator } from 'src/ui/separator';
+import { Text } from 'src/ui/text';
 
 import styles from './ArticleParamsForm.module.scss';
 import {
+	ArticleStateType,
 	backgroundColors,
 	contentWidthArr,
 	defaultArticleState,
 	fontColors,
 	fontFamilyOptions,
 	fontSizeOptions,
+	OptionType,
 } from 'src/constants/articleProps';
 
 export const ArticleParamsForm = ({
 	setSettings,
 }: {
-	setSettings: (settings: any) => void;
+	setSettings: (settings: ArticleStateType) => void;
 }) => {
 	const [isOpen, setIsOpen] = useState(false);
 	const sidebarRef = useRef<HTMLDivElement>(null);
 
-	const [settings, setLocalSettings] = useState(defaultArticleState);
+	const [articleState, setArticleState] = useState(defaultArticleState);
 
 	useEffect(() => {
 		const handleClickOutside = (event: MouseEvent) => {
@@ -35,23 +39,25 @@ export const ArticleParamsForm = ({
 			}
 		};
 
-		document.addEventListener('mousedown', handleClickOutside);
+		if (isOpen) {
+			document.addEventListener('mousedown', handleClickOutside);
+		}
 
 		return () => document.removeEventListener('mousedown', handleClickOutside);
-	}, []);
+	}, [isOpen]);
 
-	const handleChange = (key: keyof typeof defaultArticleState, value: any) => {
-		setLocalSettings((prev) => ({ ...prev, [key]: value }));
+	const handleChange = (key: keyof ArticleStateType, value: OptionType) => {
+		setArticleState((prev) => ({ ...prev, [key]: value }));
 	};
 
 	const handleReset = () => {
-		setLocalSettings(defaultArticleState);
+		setArticleState(defaultArticleState);
 		setSettings(defaultArticleState);
 	};
 
 	const applySettings = (e: React.FormEvent) => {
 		e.preventDefault();
-		setSettings(settings);
+		setSettings(articleState);
 	};
 
 	return (
@@ -59,49 +65,46 @@ export const ArticleParamsForm = ({
 			<ArrowButton isOpen={isOpen} onClick={() => setIsOpen(!isOpen)} />
 			<aside
 				ref={sidebarRef}
-				className={`${styles.container} ${
-					isOpen ? styles.container_open : ''
-				}`}>
-				<form className={styles.form} onSubmit={applySettings}>
+				className={clsx(styles.container, { [styles.container_open]: isOpen })}
+				>
+				<form className={styles.form} onSubmit={applySettings} onReset={handleReset}>
+					<Text as='h1' size={31} weight={800} uppercase>
+						Задайте параметры
+					</Text>
 					<Select
-						selected={settings.fontFamilyOption}
+						selected={articleState.fontFamilyOption}
 						options={fontFamilyOptions}
-						onChange={(val) => handleChange('fontFamilyOption', val)}
+						onChange={(value) => handleChange('fontFamilyOption', value)}
 						title='Шрифт'
 					/>
 					<RadioGroup
 						name='fontSize'
 						options={fontSizeOptions}
-						selected={settings.fontSizeOption}
-						onChange={(val) => handleChange('fontSizeOption', val)}
+						selected={articleState.fontSizeOption}
+						onChange={(value) => handleChange('fontSizeOption', value)}
 						title='Размер шрифта'
 					/>
 					<Select
-						selected={settings.fontColor}
+						selected={articleState.fontColor}
 						options={fontColors}
-						onChange={(val) => handleChange('fontColor', val)}
+						onChange={(value) => handleChange('fontColor', value)}
 						title='Цвет шрифта'
 					/>
 					<Separator />
 					<Select
-						selected={settings.backgroundColor}
+						selected={articleState.backgroundColor}
 						options={backgroundColors}
-						onChange={(val) => handleChange('backgroundColor', val)}
+						onChange={(value) => handleChange('backgroundColor', value)}
 						title='Цвет фона'
 					/>
 					<Select
-						selected={settings.contentWidth}
+						selected={articleState.contentWidth}
 						options={contentWidthArr}
-						onChange={(val) => handleChange('contentWidth', val)}
+						onChange={(value) => handleChange('contentWidth', value)}
 						title='Ширина контента'
 					/>
 					<div className={styles.bottomContainer}>
-						<Button
-							title='Сбросить'
-							htmlType='reset'
-							type='clear'
-							onClick={handleReset}
-						/>
+						<Button title='Сбросить' htmlType='reset' type='clear' />
 						<Button title='Применить' htmlType='submit' type='apply' />
 					</div>
 				</form>

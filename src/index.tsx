@@ -13,21 +13,21 @@ const domNode = document.getElementById('root') as HTMLDivElement;
 const root = createRoot(domNode);
 
 const App = () => {
-	const [settings, setSettings] = useState(defaultArticleState);
+	const [articleState, setArticleState] = useState(defaultArticleState);
 
 	return (
 		<main
-			className={clsx(styles.main)}
+			className={styles.main}
 			style={
 				{
-					'--font-family': settings.fontFamilyOption.value,
-					'--font-size': settings.fontSizeOption.value,
-					'--font-color': settings.fontColor.value,
-					'--container-width': settings.contentWidth.value,
-					'--bg-color': settings.backgroundColor.value,
+					'--font-family': articleState.fontFamilyOption.value,
+					'--font-size': articleState.fontSizeOption.value,
+					'--font-color': articleState.fontColor.value,
+					'--container-width': articleState.contentWidth.value,
+					'--bg-color': articleState.backgroundColor.value,
 				} as CSSProperties
 			}>
-			<ArticleParamsForm setSettings={setSettings} />
+			<ArticleParamsForm setSettings={setArticleState} />
 			<Article />
 		</main>
 	);
