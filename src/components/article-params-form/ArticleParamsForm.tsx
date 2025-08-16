@@ -22,12 +22,12 @@ import {
 export const ArticleParamsForm = ({
 	setSettings,
 }: {
-	setSettings: (settings: ArticleStateType) => void;
+	setSettings: (articleFormState: ArticleStateType) => void;
 }) => {
 	const [isOpen, setIsOpen] = useState(false);
 	const sidebarRef = useRef<HTMLDivElement>(null);
 
-	const [articleState, setArticleState] = useState(defaultArticleState);
+	const [articleFormState, setArticleFormState] = useState(defaultArticleState);
 
 	useEffect(() => {
 		const handleClickOutside = (event: MouseEvent) => {
@@ -47,17 +47,17 @@ export const ArticleParamsForm = ({
 	}, [isOpen]);
 
 	const handleChange = (key: keyof ArticleStateType, value: OptionType) => {
-		setArticleState((prev) => ({ ...prev, [key]: value }));
+		setArticleFormState((prev) => ({ ...prev, [key]: value }));
 	};
 
 	const handleReset = () => {
-		setArticleState(defaultArticleState);
+		setArticleFormState(defaultArticleState);
 		setSettings(defaultArticleState);
 	};
 
 	const applySettings = (e: React.FormEvent) => {
 		e.preventDefault();
-		setSettings(articleState);
+		setSettings(articleFormState);
 	};
 
 	return (
@@ -72,7 +72,7 @@ export const ArticleParamsForm = ({
 						Задайте параметры
 					</Text>
 					<Select
-						selected={articleState.fontFamilyOption}
+						selected={articleFormState.fontFamilyOption}
 						options={fontFamilyOptions}
 						onChange={(value) => handleChange('fontFamilyOption', value)}
 						title='Шрифт'
@@ -80,25 +80,25 @@ export const ArticleParamsForm = ({
 					<RadioGroup
 						name='fontSize'
 						options={fontSizeOptions}
-						selected={articleState.fontSizeOption}
+						selected={articleFormState.fontSizeOption}
 						onChange={(value) => handleChange('fontSizeOption', value)}
 						title='Размер шрифта'
 					/>
 					<Select
-						selected={articleState.fontColor}
+						selected={articleFormState.fontColor}
 						options={fontColors}
 						onChange={(value) => handleChange('fontColor', value)}
 						title='Цвет шрифта'
 					/>
 					<Separator />
 					<Select
-						selected={articleState.backgroundColor}
+						selected={articleFormState.backgroundColor}
 						options={backgroundColors}
 						onChange={(value) => handleChange('backgroundColor', value)}
 						title='Цвет фона'
 					/>
 					<Select
-						selected={articleState.contentWidth}
+						selected={articleFormState.contentWidth}
 						options={contentWidthArr}
 						onChange={(value) => handleChange('contentWidth', value)}
 						title='Ширина контента'
